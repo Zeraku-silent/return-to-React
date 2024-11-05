@@ -1,35 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { FC } from "react";
+import "./App.css";
+import { Box, Text } from "@chakra-ui/react";
+import { MaterialSelector } from "./components/menu/Selector";
 
-function App() {
-  const [count, setCount] = useState(0)
+export type Material = {
+  name: string;
+  price: number;
+};
+
+export type Stuff = Material[];
+
+const App: FC = () => {
+  const oneEyelet = 15;
+
+  const china: Material = {
+    name: "Китай",
+    price: 590,
+  };
+  const cast: Material = {
+    name: "Литой",
+    price: 660,
+  };
+
+  const materials = [china, cast];
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Box m={0} w={"100vw"} h={"100vh"} bg={"dark-gray"}>
+      <Text fontSize={60} pt={10} color={"darkorange"}>
+        Калькулятор цен
+      </Text>
+      <Box pt={"5"}>
+        <MaterialSelector stuff={materials} />
+      </Box>
+    </Box>
+  );
+};
 
-export default App
+export default App;
