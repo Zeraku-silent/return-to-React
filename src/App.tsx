@@ -1,7 +1,6 @@
-import { FC } from "react";
-import "./App.css";
-import { Box, Text } from "@chakra-ui/react";
-import { MaterialSelector } from "./components/menu/Selector";
+import { FC, useEffect, useState } from "react";
+import { Box, Card, Center, Flex, Select, Text } from "@chakra-ui/react";
+import { cast, china } from "./assets/material";
 
 export type Material = {
   name: string;
@@ -10,28 +9,62 @@ export type Material = {
 
 export type Stuff = Material[];
 
+const oneEyelet = 15;
+
 const App: FC = () => {
-  const oneEyelet = 15;
+  const [selector, setSelector] = useState("Не выбрано");
+  const [currentMaterial, setCurrentMaterial] = useState<Material>();
 
-  const china: Material = {
-    name: "Китай",
-    price: 590,
-  };
-  const cast: Material = {
-    name: "Литой",
-    price: 660,
+  useEffect(() => {
+    if (selector === "Китай") {
+      setCurrentMaterial({ ...currentMaterial, ...china });
+    } else if (selector === "Литой") {
+      setCurrentMaterial({ ...currentMaterial, ...cast });
+    } else {
+      setCurrentMaterial(undefined);
+    }
+  }, [selector]);
+
+  const chooseMaterial = (material: string) => {
+    setSelector(material);
   };
 
-  const materials = [china, cast];
+  const handleChange = (
+    event: React.ChangeEventHandler<HTMLSelectElement> | undefined,
+  ) => {
+    chooseMaterial(event.target.value);
+  };
+  // console.log(selector);
+  console.log(currentMaterial);
 
   return (
     <Box m={0} w={"100vw"} h={"100vh"} bg={"dark-gray"}>
       <Text fontSize={60} pt={10} color={"darkorange"}>
         Калькулятор цен
       </Text>
-      <Box pt={"5"}>
-        <MaterialSelector stuff={materials} />
-      </Box>
+      <Flex w={"auto"} pt={"5"}>
+        <Center ml={10}>
+          <Card h={300}>
+            <Select
+              onChange={handleChange}
+              value={selector}
+              color={"white"}
+              w={400}
+              placeholder="Выберите материал"
+            >
+              <option value={china.name}>{china.name}</option>
+              <option value={cast.name}>{cast.name}</option>
+            </Select>
+          </Card>
+        </Center>
+        <Center ml={10}>
+          <Card h={300} w={100}>
+            <Text textAlign={"center"} color={"white"}>
+              Цена за м/кв {currentMaterial?.price}
+            </Text>
+          </Card>
+        </Center>
+      </Flex>
     </Box>
   );
 };
