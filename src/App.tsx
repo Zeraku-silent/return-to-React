@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { Box, Card, Center, Flex, Select, Text } from "@chakra-ui/react";
 import { cast, china } from "./assets/material";
+import { MetrInput } from "./components/menu/Input";
 
 export type Material = {
   name: string;
@@ -16,9 +17,9 @@ const App: FC = () => {
   const [currentMaterial, setCurrentMaterial] = useState<Material>();
 
   useEffect(() => {
-    if (selector === "Китай") {
+    if (selector === "Китай 440г/м²") {
       setCurrentMaterial({ ...currentMaterial, ...china });
-    } else if (selector === "Литой") {
+    } else if (selector === "Литой 510г/м²") {
       setCurrentMaterial({ ...currentMaterial, ...cast });
     } else {
       setCurrentMaterial(undefined);
@@ -32,7 +33,7 @@ const App: FC = () => {
   const handleChange = (
     event: React.ChangeEventHandler<HTMLSelectElement> | undefined,
   ) => {
-    chooseMaterial(event.target.value);
+    chooseMaterial(event?.target.value);
   };
   // console.log(selector);
   console.log(currentMaterial);
@@ -55,6 +56,9 @@ const App: FC = () => {
               <option value={china.name}>{china.name}</option>
               <option value={cast.name}>{cast.name}</option>
             </Select>
+            <Flex>
+              <MetrInput material={currentMaterial} />
+            </Flex>
           </Card>
         </Center>
         <Center ml={10}>
