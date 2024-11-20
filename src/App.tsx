@@ -10,8 +10,6 @@ export type Material = {
 
 export type Stuff = Material[];
 
-const oneEyelet = 15;
-
 const App: FC = () => {
   const [selector, setSelector] = useState("Не выбрано");
   const [currentMaterial, setCurrentMaterial] = useState<Material>();
