@@ -1,5 +1,5 @@
 import { Material } from "@/App";
-import { Box, Flex, Input, Text } from "@chakra-ui/react";
+import { Box, Card, Center, Flex, Input, Text } from "@chakra-ui/react";
 import { FC, useEffect, useState } from "react";
 
 type IProps = {
@@ -14,6 +14,7 @@ export const MetrInput: FC = ({ material }: IProps) => {
   const [eyelets, setEyelets] = useState(0);
   const [price, setPrice] = useState(0);
   const [eyeletsOnPerimetr, setEyeltesOnPerimetr] = useState(0);
+  const [gluingPrice, setGluingPrice] = useState(0);
   const mat = material;
 
   const chooseWidth = (value: number) => {
@@ -39,58 +40,99 @@ export const MetrInput: FC = ({ material }: IProps) => {
   ) => {
     chooseLength(e.target.value);
   };
-  console.log(width);
-  console.log(lenght);
-  // console.log(price);
-  console.log(eyeletsOnPerimetr);
-
-  const calcualteEyets = () => {
-    setEyeltesOnPerimetr(Math.ceil((2 * (+lenght + +width)) / (eyelets * 10)));
-  };
 
   useEffect(() => {
+    const calcualteEyets = () => {
+      setEyeltesOnPerimetr(
+        Math.ceil((2 * (+lenght + +width)) / (eyelets * 10)),
+      );
+    };
+
+    const calculateGluing = () => {
+      setGluingPrice(((2 * (+lenght + +width)) / 1000) * 19);
+      console.log(gluingPrice);
+    };
+    calculateGluing();
+
     calcualteEyets();
-    setPrice(
-      ((width * lenght) / 1000000) * mat?.price + eyeletsOnPerimetr * 15,
-    );
-  }, [lenght, width, material]);
+    if (eyelets > 0) {
+      setPrice(
+        ((width * lenght) / 1000000) * mat?.price +
+          eyeletsOnPerimetr * oneEyelet,
+      );
+    }
+  }, [
+    lenght,
+    width,
+    material,
+    mat?.price,
+    eyeletsOnPerimetr,
+    eyelets,
+    gluingPrice,
+  ]);
 
   return (
-    <Box>
-      <Text ml={1}>Размеры</Text>
-      <Input
-        m={1}
-        type="number"
-        onChange={handleChangeWidth}
-        placeholder="Ширина"
-        color={"white"}
-        w={"45%"}
-      />
-      мм
-      <br></br>
-      <Input
-        m={1}
-        onChange={handleChangeLength}
-        type="number"
-        placeholder="Длина"
-        color={"white"}
-        w={"45%"}
-      />
-      мм
-      <br></br>
-      <Flex>
-        {" "}
+    <Flex justifyItems={"center"} w={"100%"}>
+      <Box
+        m={5}
+        mr={2}
+        p={5}
+        border={"3px solid teal"}
+        borderRadius={25}
+        h={"auto"}
+        w={"70%"}
+      >
+        <Text ml={1}>Размеры</Text>
         <Input
           m={1}
-          onChange={handleChangeEyelets}
           type="number"
-          placeholder="частота люверсов"
+          onChange={handleChangeWidth}
+          placeholder="Ширина"
           color={"white"}
-          w={"auto"}
+          w={"45%"}
         />
-        см
+        мм
+        <br></br>
+        <Input
+          m={1}
+          onChange={handleChangeLength}
+          type="number"
+          placeholder="Длина"
+          color={"white"}
+          w={"45%"}
+        />
+        мм
+        <br></br>
+        <Flex>
+          <Input
+            borderColor={"teal"}
+            m={1}
+            onChange={handleChangeEyelets}
+            type="number"
+            placeholder="частота люверсов"
+            color={"white"}
+            w={"auto"}
+          />
+          см
+          <Text
+            w={"30%"}
+            textAlign={"center"}
+            border={"1px solid"}
+            borderColor={"gray"}
+            borderRadius={25}
+            m={2}
+            fontSize="xl"
+            fontWeight="bold"
+          >
+            {eyelets
+              ? eyeletsOnPerimetr % 2 === 0
+                ? eyeletsOnPerimetr
+                : eyeletsOnPerimetr + 1
+              : 0}
+          </Text>
+        </Flex>
+        <br></br>
         <Text
-          w={"30%"}
           textAlign={"center"}
           border={"1px solid"}
           borderColor={"gray"}
@@ -99,23 +141,29 @@ export const MetrInput: FC = ({ material }: IProps) => {
           fontSize="xl"
           fontWeight="bold"
         >
-          {eyeletsOnPerimetr % 2 === 0
-            ? eyeletsOnPerimetr
-            : eyeletsOnPerimetr + 1}
+          {price ? price.toFixed(2) : price} ₽
         </Text>
-      </Flex>
-      <br></br>
-      <Text
-        textAlign={"center"}
-        border={"1px solid"}
-        borderColor={"gray"}
+      </Box>
+
+      <Card
+        m={5}
+        ml={2}
+        p={5}
+        border={"3px solid teal"}
         borderRadius={25}
-        m={2}
-        fontSize="xl"
-        fontWeight="bold"
+        h={"auto"}
+        w={"auto"}
       >
-        {material ? price.toFixed(2) : 0} рублс
-      </Text>
-    </Box>
+        <Text mb={3} color={"white"}>
+          Цена за м/кв: {mat?.price}₽
+        </Text>
+        <Text mb={3} color={"white"}>
+          Цена проклейки: {gluingPrice}₽
+        </Text>
+        <Text mb={3} color={"white"}>
+          Цена люверсов: {eyeletsOnPerimetr * oneEyelet}₽
+        </Text>
+      </Card>
+    </Flex>
   );
 };

@@ -37,14 +37,25 @@ const App: FC = () => {
   console.log(currentMaterial);
 
   return (
-    <Box m={0} w={"100vw"} h={"100vh"} bg={"dark-gray"}>
-      <Text fontSize={60} pt={10} color={"darkorange"}>
+    <Box m={0} w={"auto"} h={"100vh"} bg={"dark-gray"}>
+      <Text textAlign={"center"} fontSize={60} pt={10} color={"teal"}>
         Калькулятор цен
       </Text>
-      <Flex w={"auto"} pt={"5"}>
-        <Center ml={10}>
-          <Card h={300}>
+      <Flex
+        flexDirection={"column"}
+        justifyContent={"center"}
+        ml={"auto"}
+        mr={"auto"}
+        w={"auto"}
+        pt={"5"}
+      >
+        <Center w={"50%"} ml={"auto"} mr={"auto"}>
+          <Card w={"100%"} h={"auto"}>
             <Select
+              borderColor={"teal"}
+              mt={5}
+              alignSelf={"center"}
+              mb={10}
               onChange={handleChange}
               value={selector}
               color={"white"}
@@ -54,16 +65,9 @@ const App: FC = () => {
               <option value={china.name}>{china.name}</option>
               <option value={cast.name}>{cast.name}</option>
             </Select>
-            <Flex>
+            <Flex alignSelf={"center"}>
               <MetrInput material={currentMaterial} />
             </Flex>
-          </Card>
-        </Center>
-        <Center ml={10}>
-          <Card h={300} w={100}>
-            <Text textAlign={"center"} color={"white"}>
-              Цена за м/кв {currentMaterial?.price}
-            </Text>
           </Card>
         </Center>
       </Flex>
