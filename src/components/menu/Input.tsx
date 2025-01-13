@@ -1,5 +1,5 @@
 import { Material } from "@/App";
-import { Box, Card, Center, Flex, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Card, Center, Flex, Input, Text } from "@chakra-ui/react";
 import { FC, useEffect, useState } from "react";
 
 type IProps = {
@@ -49,18 +49,24 @@ export const MetrInput: FC = ({ material }: IProps) => {
     };
 
     const calculateGluing = () => {
-      setGluingPrice(((2 * (+lenght + +width)) / 1000) * 19);
+      if (lenght * width >= 2000000) {
+        setGluingPrice(Math.ceil(((2 * (+lenght + +width)) / 1000) * 19));
+      } else if (lenght * width < 2000000 && lenght * width > 0) {
+        setGluingPrice(
+          Math.ceil(((2 * (+lenght + 100 + (+width + 100))) / 1000) * 19),
+        );
+      }
       console.log(gluingPrice);
     };
     calculateGluing();
 
     calcualteEyets();
-    if (eyelets > 0) {
-      setPrice(
-        ((width * lenght) / 1000000) * mat?.price +
-          eyeletsOnPerimetr * oneEyelet,
-      );
-    }
+    // if (eyelets > 0) {
+    //   setPrice(
+    //     ((width * lenght) / 1000000) * mat?.price +
+    //       eyeletsOnPerimetr * oneEyelet,
+    //   );
+    // }
   }, [
     lenght,
     width,
@@ -70,6 +76,22 @@ export const MetrInput: FC = ({ material }: IProps) => {
     eyelets,
     gluingPrice,
   ]);
+
+  const calculatePrice = () => {
+    if (width * lenght >= 2000000) {
+      setPrice(
+        ((width * lenght) / 1000000) * mat?.price +
+          eyeletsOnPerimetr * oneEyelet +
+          gluingPrice,
+      );
+    } else if (width * lenght < 2000000) {
+      setPrice(
+        (((+width + 100) * (+lenght + 100)) / 1000000) * mat?.price +
+          eyeletsOnPerimetr * oneEyelet +
+          gluingPrice,
+      );
+    }
+  };
 
   return (
     <Flex justifyItems={"center"} w={"100%"}>
@@ -132,6 +154,9 @@ export const MetrInput: FC = ({ material }: IProps) => {
           </Text>
         </Flex>
         <br></br>
+        <Button onClick={calculatePrice} bg={"teal"}>
+          Рассчитать
+        </Button>
         <Text
           textAlign={"center"}
           border={"1px solid"}
@@ -158,7 +183,7 @@ export const MetrInput: FC = ({ material }: IProps) => {
           Цена за м/кв: {mat?.price}₽
         </Text>
         <Text mb={3} color={"white"}>
-          Цена проклейки: {gluingPrice}₽
+          Цена за работу над проклейкой: {gluingPrice}₽
         </Text>
         <Text mb={3} color={"white"}>
           Цена люверсов: {eyeletsOnPerimetr * oneEyelet}₽
